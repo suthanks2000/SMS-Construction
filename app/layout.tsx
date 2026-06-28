@@ -1,55 +1,50 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cormorant_Garamond } from "next/font/google";
+import { Manrope, Hanken_Grotesk } from "next/font/google";
+import { FaWhatsapp } from "react-icons/fa";
 import "./globals.css";
-import LenisProvider from "./components/LenisProvider";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const hankenGrotesk = Hanken_Grotesk({
+  variable: "--font-hanken-grotesk",
   subsets: ["latin"],
 });
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-});
-
-import PageLoader from "./components/PageLoader";
-import CustomCursor from "./components/CustomCursor";
-import WhatsAppButton from "./components/WhatsAppButton";
-import GoldParticleBackground from "./components/GoldParticleBackground";
 
 export const metadata: Metadata = {
-  title: "SMS Construction | Nagercoil, Kanyakumari, Tamil Nadu",
-  description: "Exquisite luxury residences, premium apartments, and custom-designed villas by SMS Construction in Nagercoil & Kanyakumari, Tamil Nadu. Discover state-of-the-art living.",
-  keywords: "SMS Construction, Luxury Real Estate Nagercoil, Villas in Kanyakumari, Premium Homes Tamil Nadu, Builders in Nagercoil",
+  title: "SMS Construction | Luxury Builders & Premium Interiors",
+  description: "Exquisite high-end residential and commercial builds, bespoke interiors, 3D visualizations, and comprehensive engineering services by SMS Construction.",
+  icons: {
+    icon: "/logo.png",
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-luxury-bg text-luxury-text-primary selection:bg-luxury-gold/20 selection:text-luxury-text-primary">
-        <LenisProvider>
-          <PageLoader />
-          <CustomCursor />
-          <WhatsAppButton />
-          <GoldParticleBackground />
-          {children}
-        </LenisProvider>
+    <html lang="en" className={`scroll-smooth ${manrope.variable} ${hankenGrotesk.variable}`}>
+      <body className="antialiased relative">
+        {children}
+
+        {/* Floating WhatsApp Widget */}
+        <a
+          href="https://wa.me/919443200000"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-[#D4AF37] flex items-center justify-center text-[#080C14] shadow-2xl hover:bg-[#FBBF24] hover:scale-110 active:scale-95 transition-all duration-300 group"
+          aria-label="Chat on WhatsApp"
+        >
+          {/* Ripple Pulse effect */}
+          <span className="absolute inset-0 rounded-full bg-[#D4AF37]/40 animate-ping pointer-events-none group-hover:hidden" />
+
+          <FaWhatsapp size={22} />
+        </a>
       </body>
     </html>
   );
 }
-

@@ -1,27 +1,27 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
-import Portfolio from "./components/Portfolio";
-import FloorPlans from "./components/FloorPlans";
-import Amenities from "./components/Amenities";
-import Location from "./components/Location";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
+'use client';
+
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Services from './components/Services';
+import About from './components/About';
+import Projects from './components/Projects';
+import WhyChooseUs from './components/WhyChooseUs';
+import Testimonials from './components/Testimonials';
+import Contact from './components/Contact';
+import Footer from './components/Footer';
 
 export default function Home() {
   return (
-    <>
+    <main className="min-h-screen bg-[#080C14] text-white">
       <Navbar />
-      <main className="flex-1 flex flex-col">
-        <Hero />
-        <About />
-        <Portfolio />
-        <FloorPlans />
-        <Amenities />
-        <Location />
-        <Contact />
-      </main>
+      <Hero />
+      <Services />
+      <About />
+      <Projects />
+      <WhyChooseUs />
+      <Testimonials />
+      <Contact />
       <Footer />
-    </>
+    </main>
   );
 }

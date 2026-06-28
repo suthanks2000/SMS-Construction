@@ -1,154 +1,178 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { Menu, X, PhoneCall } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === '/') {
+      return pathname === '/';
+    }
+    if (href.startsWith('/#')) {
+      return pathname === '/';
+    }
+    return pathname === href;
+  };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-      
-      // Navbar hide/show scroll logic
-      if (window.scrollY > 120) {
-        if (window.scrollY > lastScrollY) {
-          setIsVisible(false); // scrolling down
-        } else {
-          setIsVisible(true); // scrolling up
-        }
-      } else {
-        setIsVisible(true); // at the top
-      }
-      setLastScrollY(window.scrollY);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About Our Legacy', href: '#about' },
-    { name: 'Curated Showcase', href: '#portfolio' },
-    { name: 'Floor Layouts', href: '#floor-plans' },
-    { name: 'Premium Amenities', href: '#amenities' },
-    { name: 'Heritage Locations', href: '#location' },
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Services', href: '/services' },
+    { name: 'Projects', href: '/projects' },
+    { name: 'Contact', href: '/contact' },
   ];
 
-  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    setIsMobileMenuOpen(false);
-    
-    const element = document.querySelector(href);
-    if (element) {
-      const offset = 80; // height of sticky header
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+  const navContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: 0.1,
+      }
+    }
+  };
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+  const navItem = {
+    hidden: { y: -10, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }
     }
   };
 
   return (
-    <motion.nav
-      initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : -100 }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled 
-          ? 'bg-luxury-glass border-b border-luxury-border-gold py-4 backdrop-blur-md' 
-          : 'bg-transparent py-6 border-b border-transparent'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        
-        {/* Brand Logo */}
-        <a href="#home" onClick={(e) => handleScrollTo(e, '#home')} className="flex flex-col select-none group">
-          <span className="font-serif text-2xl md:text-3xl font-bold tracking-wide text-luxury-champagne group-hover:text-luxury-soft-gold transition-colors duration-300">
-            SMS
-          </span>
-          <span className="text-[9px] md:text-[10px] uppercase tracking-[0.3em] text-luxury-text-secondary mt-[-2px] group-hover:text-luxury-gold transition-colors duration-300">
-            Construction
-          </span>
-        </a>
-
-        {/* Desktop Navigation Links */}
-        <div className="hidden lg:flex items-center space-x-8">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => handleScrollTo(e, link.href)}
-              className="text-xs uppercase tracking-widest text-luxury-text-secondary hover:text-luxury-soft-gold transition-colors duration-300 font-medium relative py-1 after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-luxury-gold hover:after:w-full after:transition-all after:duration-300"
-            >
-              {link.name}
-            </a>
-          ))}
-        </div>
-
-        {/* Call to Action Button */}
-        <div className="hidden lg:block">
-          <a
-            href="#contact"
-            onClick={(e) => handleScrollTo(e, '#contact')}
-            className="group flex items-center gap-2 border border-luxury-gold/50 bg-luxury-secondary/50 text-luxury-soft-gold hover:text-luxury-bg hover:bg-luxury-gold hover:border-luxury-gold px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300 shadow-[0_0_15px_rgba(212,175,55,0.05)] hover:shadow-[0_0_20px_rgba(212,175,55,0.2)]"
-          >
-            Inquire Now
-            <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
-          </a>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="lg:hidden p-2 text-luxury-text-primary hover:text-luxury-gold transition-colors duration-300 focus:outline-none"
-          aria-label="Toggle menu"
+    <>
+      <motion.header
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
+        className={`fixed left-1/2 -translate-x-1/2 w-[92%] max-w-5xl z-50 transition-all duration-500 rounded-full ${
+          scrolled
+            ? 'top-4 py-3 px-6 bg-[#080C14]/80 backdrop-blur-xl border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)]'
+            : 'top-6 py-4 px-6 bg-[#080C14]/50 backdrop-blur-md border border-white/[0.06]'
+        }`}
+      >
+        <motion.div 
+          variants={navContainer}
+          initial="hidden"
+          animate="visible"
+          className="flex justify-between items-center w-full"
         >
-          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+          <motion.div variants={navItem}>
+            <Link href="/" className="flex items-center gap-3">
+              <div className="relative w-8 h-8">
+                <Image
+                  src="/logo.png"
+                  alt="SMS Construction Logo"
+                  fill
+                  className="object-contain"
+                  priority
+                />
+              </div>
+              <span className="font-serif font-bold text-base tracking-wide text-gradient-gold">
+                SMS CONSTRUCTION
+              </span>
+            </Link>
+          </motion.div>
 
-      </div>
+          <nav className="hidden lg:flex gap-8 items-center">
+            {navLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <motion.div key={link.name} variants={navItem}>
+                  <Link
+                    href={link.href}
+                    className={`text-[13px] font-semibold transition-colors duration-300 tracking-wide relative pb-1.5 ${
+                      active ? 'text-[#D4AF37]' : 'text-[#8B95A5] hover:text-[#D4AF37]'
+                    }`}
+                  >
+                    {link.name}
+                    {active && (
+                      <motion.span
+                        layoutId="activeNavDot"
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#D4AF37] rounded-full"
+                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                      />
+                    )}
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </nav>
 
-      {/* Mobile Navigation Panel */}
-      <div className={`fixed inset-y-0 right-0 w-full sm:w-80 bg-luxury-secondary border-l border-luxury-border-gold z-40 transform transition-transform duration-500 ease-out lg:hidden flex flex-col p-8 pt-24 ${
-        isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-      }`}>
-        <div className="flex flex-col space-y-6">
-          {navLinks.map((link) => (
+          <motion.div variants={navItem} className="hidden lg:flex items-center">
             <a
-              key={link.name}
-              href={link.href}
-              onClick={(e) => handleScrollTo(e, link.href)}
-              className="text-sm uppercase tracking-widest text-luxury-text-primary hover:text-luxury-gold transition-colors duration-300 font-semibold border-b border-luxury-graphite pb-3"
+              href="tel:+919443200000"
+              className="flex items-center gap-2 bg-[#D4AF37] text-[#080C14] font-bold text-[12px] px-5 py-2 rounded-full hover:bg-[#FBBF24] active:scale-95 transition-all duration-300"
             >
-              {link.name}
+              <PhoneCall size={12} />
+              <span>Call Now</span>
             </a>
-          ))}
-          <a
-            href="#contact"
-            onClick={(e) => handleScrollTo(e, '#contact')}
-            className="group flex items-center justify-center gap-2 border border-luxury-gold bg-luxury-secondary text-luxury-gold hover:bg-luxury-gold hover:text-luxury-bg px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 mt-4"
-          >
-            Inquire Now
-            <ArrowUpRight className="w-4 h-4" />
-          </a>
-        </div>
+          </motion.div>
 
-        <div className="mt-auto text-center border-t border-luxury-graphite pt-6">
-          <p className="font-serif text-lg font-semibold text-luxury-champagne">SMS Construction</p>
-          <p className="text-[10px] text-luxury-text-secondary uppercase tracking-wider mt-1">Nagercoil, Kanyakumari</p>
-        </div>
-      </div>
-    </motion.nav>
+          <motion.button
+            variants={navItem}
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden text-white/80 hover:text-[#D4AF37] transition-colors focus:outline-none"
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </motion.button>
+        </motion.div>
+      </motion.header>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-[#080C14]/98 z-40 lg:hidden flex flex-col justify-center items-center gap-8"
+          >
+            <nav className="flex flex-col gap-6 text-center">
+              {navLinks.map((link) => {
+                const active = isActive(link.href);
+                return (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`text-2xl font-serif font-semibold transition-colors ${
+                      active ? 'text-[#D4AF37]' : 'text-white/80 hover:text-[#D4AF37]'
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+                );
+              })}
+            </nav>
+            <a
+              href="tel:+919443200000"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 bg-[#D4AF37] text-[#080C14] font-bold px-8 py-3 rounded-full"
+            >
+              <PhoneCall size={18} />
+              <span>Call Now</span>
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }

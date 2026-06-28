@@ -1,145 +1,147 @@
 'use client';
 
-import { Phone, Mail, MapPin, ArrowUp } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { ArrowUp, Phone, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
-  const handleScrollTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
   return (
-    <footer className="bg-[#0E0E0E] border-t border-luxury-gold/25 pt-20 pb-10 relative">
+    <footer className="bg-[#060A10] border-t border-white/[0.04] pt-20 pb-12 relative overflow-hidden">
       
-      {/* Scroll to Top Trigger */}
-      <button 
-        onClick={handleScrollTop}
-        className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-luxury-secondary border border-luxury-border-gold flex items-center justify-center text-luxury-gold hover:text-luxury-bg hover:bg-luxury-gold transition-all duration-300 shadow-lg cursor-pointer"
-        aria-label="Scroll to top"
-      >
-        <ArrowUp className="w-5 h-5 animate-pulse" />
-      </button>
+      {/* Background Radial Glow */}
+      <div className="absolute -bottom-20 -right-20 w-[300px] h-[300px] bg-[#D4AF37]/3 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-        
-        {/* Brand Block */}
-        <div className="flex flex-col space-y-6">
-          <div className="flex flex-col select-none">
-            <span className="font-serif text-3xl font-bold tracking-wide text-luxury-champagne">
-              SMS
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.3em] text-luxury-text-secondary mt-[-2px]">
-              Construction
-            </span>
-          </div>
-          <p className="text-sm text-luxury-text-secondary leading-relaxed font-light">
-            Architecting iconic structures and curated luxury living environments across Nagercoil and Kanyakumari District. Creating legacies built to endure generations.
-          </p>
-          <div className="flex items-center space-x-4">
-            <a href="#" className="w-10 h-10 rounded-full border border-luxury-graphite flex items-center justify-center text-luxury-text-secondary hover:text-luxury-gold hover:border-luxury-gold transition-all duration-300 bg-luxury-bg/50">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-              </svg>
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full border border-luxury-graphite flex items-center justify-center text-luxury-text-secondary hover:text-luxury-gold hover:border-luxury-gold transition-all duration-300 bg-luxury-bg/50">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-              </svg>
-            </a>
-            <a href="#" className="w-10 h-10 rounded-full border border-luxury-graphite flex items-center justify-center text-luxury-text-secondary hover:text-luxury-gold hover:border-luxury-gold transition-all duration-300 bg-luxury-bg/50">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                <rect x="2" y="9" width="4" height="12"></rect>
-                <circle cx="4" cy="4" r="2"></circle>
-              </svg>
-            </a>
-          </div>
-        </div>
-
-        {/* Navigation Quick Links */}
-        <div>
-          <h4 className="font-serif text-lg text-luxury-champagne font-medium tracking-wide mb-6">
-            Quick Links
-          </h4>
-          <ul className="space-y-4 text-sm text-luxury-text-secondary font-light">
-            <li>
-              <a href="#about" className="hover:text-luxury-soft-gold transition-colors duration-300">About Our Legacy</a>
-            </li>
-            <li>
-              <a href="#portfolio" className="hover:text-luxury-soft-gold transition-colors duration-300">Curated Showcase</a>
-            </li>
-            <li>
-              <a href="#floor-plans" className="hover:text-luxury-soft-gold transition-colors duration-300">Floor Layouts</a>
-            </li>
-            <li>
-              <a href="#amenities" className="hover:text-luxury-soft-gold transition-colors duration-300">Premium Amenities</a>
-            </li>
-            <li>
-              <a href="#location" className="hover:text-luxury-soft-gold transition-colors duration-300">Heritage Locations</a>
-            </li>
-          </ul>
-        </div>
-
-        {/* Corporate Office */}
-        <div>
-          <h4 className="font-serif text-lg text-luxury-champagne font-medium tracking-wide mb-6">
-            Corporate Office
-          </h4>
-          <ul className="space-y-4 text-sm text-luxury-text-secondary leading-relaxed font-light">
-            <li className="flex items-start gap-3">
-              <MapPin className="w-5 h-5 text-luxury-gold shrink-0 mt-0.5" />
-              <span>
-                SMS Tower, Court Road,<br />
-                Nagercoil, Kanyakumari District,<br />
-                Tamil Nadu - 629001, India.
-              </span>
-            </li>
-            <li className="flex items-center gap-3">
-              <Phone className="w-4 h-4 text-luxury-gold shrink-0" />
-              <a href="tel:+914652234567" className="hover:text-luxury-soft-gold transition-colors duration-300">+91 (4652) 234567</a>
-            </li>
-            <li className="flex items-center gap-3">
-              <Mail className="w-4 h-4 text-luxury-gold shrink-0" />
-              <a href="mailto:sales@smsconstruction.in" className="hover:text-luxury-soft-gold transition-colors duration-300">sales@smsconstruction.in</a>
-            </li>
-          </ul>
-        </div>
-
-        {/* Site Hours & Certifications */}
-        <div>
-          <h4 className="font-serif text-lg text-luxury-champagne font-medium tracking-wide mb-6">
-            Lounge Hours
-          </h4>
-          <p className="text-sm text-luxury-text-secondary font-light leading-relaxed mb-4">
-            Visit our experience center in Nagercoil for a physical tour of mock villas.
-          </p>
-          <div className="bg-luxury-bg/50 border border-luxury-graphite rounded-lg p-4 text-xs space-y-2 text-luxury-text-secondary font-light">
-            <div className="flex justify-between">
-              <span>Mon - Sat:</span>
-              <span className="text-luxury-soft-gold font-medium">9:00 AM - 7:00 PM</span>
-            </div>
-            <div className="flex justify-between border-t border-luxury-graphite/40 pt-2">
-              <span>Sunday:</span>
-              <span className="text-luxury-gold font-medium">By Appointment Only</span>
-            </div>
-          </div>
-        </div>
-
+      {/* Scroll to Top Button */}
+      <div className="absolute right-8 top-0 -translate-y-1/2">
+        <button
+          onClick={scrollToTop}
+          className="w-10 h-10 rounded-full bg-[#0D1117] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] hover:bg-white/[0.05] active:scale-95 transition-all duration-300 cursor-pointer shadow-md"
+          aria-label="Back to top"
+        >
+          <ArrowUp size={16} />
+        </button>
       </div>
 
-      {/* Copyright Bar */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 mt-16 pt-8 border-t border-luxury-graphite/40 flex flex-col md:flex-row items-center justify-between text-xs text-luxury-text-secondary font-light gap-4">
-        <div>
-          &copy; {new Date().getFullYear()} SMS Construction. All rights reserved. Nagercoil, Kanyakumari, Tamil Nadu, India.
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-left relative z-10">
+        
+        {/* Brand column */}
+        <div className="flex flex-col gap-5">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="relative w-8 h-8">
+              <Image src="/logo.png" alt="SMS Construction Logo" fill className="object-contain" />
+            </div>
+            <span className="font-serif font-bold text-lg text-gradient-gold tracking-wide">SMS CONSTRUCTION</span>
+          </Link>
+          <p className="text-[13px] text-[#8B95A5] leading-[1.7]">
+            Redefining luxury building and industrial developments through digital blueprint precision and elite engineering execution.
+          </p>
         </div>
-        <div className="flex space-x-6">
-          <a href="#" className="hover:text-luxury-gold transition-colors duration-300">Privacy Policy</a>
-          <a href="#" className="hover:text-luxury-gold transition-colors duration-300">Terms of Use</a>
-          <a href="#" className="hover:text-luxury-gold transition-colors duration-300">TN RERA Registered</a>
+
+        {/* Quick Links Column */}
+        <div>
+          <h4 className="text-white text-[12px] font-bold uppercase tracking-[0.2em] mb-6">
+            Quick Links
+          </h4>
+          <ul className="flex flex-col gap-3">
+            {[
+              { name: 'Home', href: '/' },
+              { name: 'About', href: '/about' },
+              { name: 'Services', href: '/services' },
+              { name: 'Projects', href: '/projects' },
+              { name: 'Contact', href: '/contact' },
+            ].map((link) => (
+              <li key={link.name}>
+                <Link
+                  href={link.href}
+                  className="text-[13px] text-[#8B95A5] hover:text-[#D4AF37] transition-colors duration-300"
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Services Column */}
+        <div>
+          <h4 className="text-white text-[12px] font-bold uppercase tracking-[0.2em] mb-6">
+            Services
+          </h4>
+          <ul className="flex flex-col gap-3">
+            {[
+              { name: 'Land Surveying', href: '/services#surveying' },
+              { name: 'Architectural Planning', href: '/services#planning' },
+              { name: 'Building Construction', href: '/services#construction' },
+              { name: 'Fabrication Works', href: '/services#fabrication' },
+              { name: 'Elevation & Design', href: '/services#design' },
+              { name: 'Premium Interior Works', href: '/services#interiors' },
+              { name: 'Railing Systems', href: '/services#railing' },
+            ].map((srv) => (
+              <li key={srv.name}>
+                <Link
+                  href={srv.href}
+                  className="text-[13px] text-[#8B95A5] hover:text-[#D4AF37] transition-colors duration-300"
+                >
+                  {srv.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Contact Column */}
+        <div>
+          <h4 className="text-white text-[12px] font-bold uppercase tracking-[0.2em] mb-6">
+            Helpline
+          </h4>
+          <ul className="flex flex-col gap-4 text-[13px] text-[#8B95A5]">
+            <li className="flex items-center gap-2.5">
+              <Phone size={13} className="text-[#D4AF37] shrink-0" />
+              <a href="tel:+919443200000" className="hover:text-[#D4AF37] transition-colors duration-300">
+                +91 94432 00000
+              </a>
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Mail size={13} className="text-[#D4AF37] shrink-0" />
+              <a href="mailto:info@smsconstruction.in" className="hover:text-[#D4AF37] transition-colors duration-300">
+                info@smsconstruction.in
+              </a>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <MapPin size={13} className="text-[#D4AF37] shrink-0 mt-0.5" />
+              <a href="https://www.google.com/maps/place/SMS+CONSTRUCTION/@8.1806879,77.4308973,17z/data=!3m1!4b1!4m6!3m5!1s0x3b04f108ea52fa71:0x479afff108b86846!8m2!3d8.1806879!4d77.4308973!16s%2Fg%2F11jt3gf8tv" target="_blank" rel="noopener noreferrer" className="hover:text-[#D4AF37] transition-colors duration-300">
+                Nagercoil, TN, India
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Footer copyright & socials */}
+      <div className="max-w-7xl mx-auto px-6 border-t border-white/[0.04] pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 relative z-10">
+        <p className="text-[11px] text-[#8B95A5]">
+          © {new Date().getFullYear()} SMS Construction Group. All rights reserved.
+        </p>
+        
+        <div className="flex gap-3">
+          {[
+            { label: 'Facebook', path: 'M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z' },
+            { label: 'Twitter', path: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+            { label: 'LinkedIn', path: 'M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z' }
+          ].map((soc) => (
+            <a
+              key={soc.label}
+              href="#"
+              className="w-8 h-8 rounded-full bg-white/[0.02] border border-white/[0.04] flex items-center justify-center text-[#8B95A5] hover:text-[#D4AF37] hover:border-[#D4AF37]/20 hover:scale-105 transition-all duration-300"
+              aria-label={soc.label}
+            >
+              <svg fill="currentColor" viewBox="0 0 24 24" className="w-3.5 h-3.5">
+                <path d={soc.path} />
+              </svg>
+            </a>
+          ))}
         </div>
       </div>
     </footer>

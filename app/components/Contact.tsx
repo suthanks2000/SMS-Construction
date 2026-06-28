@@ -1,298 +1,223 @@
 'use client';
 
-import { useState, useRef } from 'react';
-import { animate } from 'animejs';
-import { Phone, Mail, Clock, Send, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { MapPin, Phone, Mail, MessageSquare, Send, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    project: 'Palms Oceanfront Duplex',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const formRef = useRef<HTMLFormElement>(null);
-  const successRef = useRef<HTMLDivElement>(null);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const [formState, setFormState] = useState({ name: '', email: '', projectType: 'Luxury Residential', message: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.phone || !formData.email) {
-      alert('Please complete all required fields.');
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    // Simulate luxury API submission delay
+    setSubmitted(true);
     setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-
-      // Trigger anime.js success reveal animation
-      setTimeout(() => {
-        if (successRef.current) {
-          animate(successRef.current, {
-            opacity: [0, 1],
-            translateY: [20, 0],
-            duration: 800,
-            ease: 'outBack'
-          });
-        }
-      }, 50);
-    }, 1500);
+      setSubmitted(false);
+      setFormState({ name: '', email: '', projectType: 'Luxury Residential', message: '' });
+    }, 3000);
   };
 
-  return (
-    <section 
-      id="contact" 
-      className="py-24 bg-luxury-secondary border-t border-luxury-graphite relative overflow-hidden"
-    >
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
-        <div className="absolute top-1/4 left-0 w-full h-[1px] bg-luxury-gold" />
-        <div className="absolute top-2/4 left-0 w-full h-[1px] bg-luxury-gold" />
-        <div className="absolute top-3/4 left-0 w-full h-[1px] bg-luxury-gold" />
-      </div>
+  const projectTypes = [
+    'Luxury Residential',
+    'Commercial Estate',
+    'Interior Renovation',
+    'Land Survey & Engineering'
+  ];
 
-      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
+  const contactInfo = [
+    { icon: MapPin, title: 'Headquarters', desc: '123 Construction Avenue, Nagercoil, Kanyakumari, Tamil Nadu', href: 'https://www.google.com/maps/place/SMS+CONSTRUCTION/@8.1806879,77.4308973,17z/data=!3m1!4b1!4m6!3m5!1s0x3b04f108ea52fa71:0x479afff108b86846!8m2!3d8.1806879!4d77.4308973!16s%2Fg%2F11jt3gf8tv' },
+    { icon: Phone, title: 'Call Office', desc: '+91 94432 00000', href: 'tel:+919443200000' },
+    { icon: MessageSquare, title: 'WhatsApp', desc: 'Chat with us instantly', href: 'https://wa.me/919443200000' },
+    { icon: Mail, title: 'Email', desc: 'info@smsconstruction.in', href: 'mailto:info@smsconstruction.in' },
+  ];
+
+  return (
+    <section id="contact" className="py-14 sm:py-28 bg-[#0A0F18] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         
-        {/* Title Block */}
-        <div className="text-center max-w-2xl mx-auto mb-16 md:mb-20">
-          <span className="text-xs uppercase tracking-[0.25em] text-luxury-gold font-semibold">
-            Inquire Privately
-          </span>
-          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-luxury-text-primary mt-2">
-            Begin Your Legacy Journey
-          </h2>
-          <div className="w-16 h-[1px] bg-luxury-gold mx-auto mt-6" />
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#D4AF37]">Contact</span>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mt-4 mb-5">Start Your Luxury Build</h2>
+          <div className="section-divider mx-auto" />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
-          {/* Left Column: Contact info */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-10">
-            <div className="space-y-6">
-              <h3 className="font-serif text-2xl md:text-3xl text-luxury-champagne font-medium">
-                Schedule a Consultation.
-              </h3>
-              <p className="text-sm text-luxury-text-secondary leading-relaxed font-light">
-                Request a private viewing, ask for structural blueprints, or coordinate a consultation with our Principal Architect. Our experience team based in Nagercoil is here to guide you.
-              </p>
-            </div>
+          {/* Left — Contact Info */}
+          <div className="lg:col-span-5 flex flex-col gap-4">
+            {contactInfo.map((item) => {
+              const Icon = item.icon;
+              return (
+                <a
+                  key={item.title}
+                  href={item.href}
+                  target={item.href.startsWith('http') ? '_blank' : undefined}
+                  rel={item.href.startsWith('http') ? 'noreferrer' : undefined}
+                  className="flex items-start gap-4 p-5 rounded-[16px] bg-white/[0.02] border border-white/[0.04] hover:border-[#D4AF37]/15 transition-all duration-300 group"
+                >
+                  <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center text-[#D4AF37] shrink-0 mt-0.5">
+                    <Icon size={16} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-[13px]">{item.title}</h4>
+                    <p className="text-[12px] text-[#8B95A5] mt-0.5">{item.desc}</p>
+                  </div>
+                </a>
+              );
+            })}
 
-            {/* Channels List */}
-            <div className="space-y-6">
-              <div className="flex gap-4 items-center">
-                <div className="w-10 h-10 rounded-full border border-luxury-graphite flex items-center justify-center text-luxury-gold bg-luxury-bg shrink-0">
-                  <Phone className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-luxury-text-secondary">Direct Liaison</p>
-                  <a href="tel:+919443423345" className="text-sm font-semibold text-luxury-text-primary hover:text-luxury-soft-gold transition-colors duration-300 font-serif">
-                    +91 94434 23345
-                  </a>
-                </div>
-              </div>
-              <div className="flex gap-4 items-center">
-                <div className="w-10 h-10 rounded-full border border-luxury-graphite flex items-center justify-center text-luxury-gold bg-luxury-bg shrink-0">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-luxury-text-secondary">Digital Correspondence</p>
-                  <a href="mailto:sales@smsconstruction.in" className="text-sm font-semibold text-luxury-text-primary hover:text-luxury-soft-gold transition-colors duration-300 font-serif">
-                    sales@smsconstruction.in
-                  </a>
-                </div>
-              </div>
-              <div className="flex gap-4 items-center">
-                <div className="w-10 h-10 rounded-full border border-luxury-graphite flex items-center justify-center text-luxury-gold bg-luxury-bg shrink-0">
-                  <Clock className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-luxury-text-secondary">Experience Lounge</p>
-                  <p className="text-sm font-semibold text-luxury-text-primary font-serif">
-                    Mon - Sat: 9:00 AM - 7:00 PM
-                  </p>
-                </div>
-              </div>
-            </div>
+            {/* Real Google Map Embed styled to fit dark theme */}
+            <a
+              href="https://www.google.com/maps/place/SMS+CONSTRUCTION/@8.1806879,77.4308973,17z/data=!3m1!4b1!4m6!3m5!1s0x3b04f108ea52fa71:0x479afff108b86846!8m2!3d8.1806879!4d77.4308973!16s%2Fg%2F11jt3gf8tv"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="relative block w-full h-[180px] rounded-[16px] overflow-hidden border border-white/[0.04] mt-2 group"
+            >
+              {/* Click Interceptor Overlay */}
+              <div className="absolute inset-0 z-10 bg-transparent cursor-pointer" />
 
-            {/* Trust disclaimer */}
-            <div className="border-t border-luxury-graphite pt-6 text-[10px] text-luxury-text-secondary font-light leading-relaxed">
-              * By submitting this dossier request, you authorize SMS Construction to coordinate contact and provide detailed floor files. Your data remains strictly confidential and secure.
-            </div>
+              {/* Styled Iframe Map Background */}
+              <iframe
+                title="SMS Construction Headquarters Location"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3949.3204044390554!2d77.42832237587884!3d8.1806931918503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b04f108ea52fa71%3A0x479afff108b86846!2sSMS%20CONSTRUCTION!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+                className="w-full h-full border-0 filter grayscale invert-[0.9] contrast-[1.25] opacity-50 group-hover:opacity-75 transition-opacity duration-300 pointer-events-none"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+
+              {/* Luxury Map Overlay Badge */}
+              <div className="absolute bottom-3 left-3 bg-[#080C14]/90 backdrop-blur-sm border border-white/[0.06] group-hover:border-[#D4AF37]/30 px-3 py-1.5 rounded-lg text-[9px] font-bold text-[#D4AF37] tracking-wider transition-all duration-300 flex items-center gap-1.5 z-20">
+                <span>OPEN IN GOOGLE MAPS</span>
+              </div>
+            </a>
           </div>
 
-          {/* Right Column: Inquiry Form */}
-          <div className="lg:col-span-7 bg-luxury-bg/50 border border-luxury-border-gold rounded-2xl p-8 shadow-2xl relative min-h-[450px] flex items-center justify-center">
-            
-            {!isSubmitted ? (
-              <form 
-                ref={formRef}
-                onSubmit={handleSubmit}
-                className="w-full space-y-6"
-              >
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* Right — Form */}
+          <div className="lg:col-span-7">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, amount: 0.15 }}
+              className="glass-card p-8 rounded-[24px] text-left h-full"
+            >
+              <h3 className="font-serif text-xl font-bold text-white mb-8">Request Consultation</h3>
+              
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                
+                <div className="grid sm:grid-cols-2 gap-5">
                   {/* Name field */}
-                  <div className="flex flex-col space-y-2">
-                    <label htmlFor="name" className="text-[10px] uppercase tracking-widest text-luxury-soft-gold font-bold">
-                      Full Name *
-                    </label>
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[11px] font-semibold text-[#8B95A5] uppercase tracking-wider">Full Name</label>
                     <input
                       type="text"
-                      id="name"
-                      name="name"
                       required
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="e.g. Anand Kumar"
-                      className="bg-luxury-secondary/50 border border-luxury-graphite text-sm rounded-lg p-3 text-luxury-text-primary placeholder:text-luxury-text-secondary/35 focus:outline-none focus:border-luxury-gold hover:border-luxury-gold/50 transition-colors duration-300"
+                      value={formState.name}
+                      onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      placeholder="John Doe"
+                      className="w-full bg-[#0D1117] border border-white/[0.06] rounded-xl px-5 py-3.5 text-[13px] text-white placeholder-white/15 hover:border-white/10 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/30 focus:shadow-[0_0_15px_rgba(212,175,55,0.08)] transition-all duration-300"
                     />
                   </div>
-
-                  {/* Phone field */}
-                  <div className="flex flex-col space-y-2">
-                    <label htmlFor="phone" className="text-[10px] uppercase tracking-widest text-luxury-soft-gold font-bold">
-                      Contact Number *
-                    </label>
+                  
+                  {/* Email field */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-[11px] font-semibold text-[#8B95A5] uppercase tracking-wider">Email</label>
                     <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
+                      type="email"
                       required
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      placeholder="e.g. +91 94434 23345"
-                      className="bg-luxury-secondary/50 border border-luxury-graphite text-sm rounded-lg p-3 text-luxury-text-primary placeholder:text-luxury-text-secondary/35 focus:outline-none focus:border-luxury-gold hover:border-luxury-gold/50 transition-colors duration-300"
+                      value={formState.email}
+                      onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                      placeholder="john@example.com"
+                      className="w-full bg-[#0D1117] border border-white/[0.06] rounded-xl px-5 py-3.5 text-[13px] text-white placeholder-white/15 hover:border-white/10 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/30 focus:shadow-[0_0_15px_rgba(212,175,55,0.08)] transition-all duration-300"
                     />
                   </div>
                 </div>
 
-                {/* Email field */}
-                <div className="flex flex-col space-y-2">
-                  <label htmlFor="email" className="text-[10px] uppercase tracking-widest text-luxury-soft-gold font-bold">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="e.g. anand@example.com"
-                    className="bg-luxury-secondary/50 border border-luxury-graphite text-sm rounded-lg p-3 text-luxury-text-primary placeholder:text-luxury-text-secondary/35 focus:outline-none focus:border-luxury-gold hover:border-luxury-gold/50 transition-colors duration-300"
-                  />
-                </div>
-
-                {/* Project selector */}
-                <div className="flex flex-col space-y-2">
-                  <label htmlFor="project" className="text-[10px] uppercase tracking-widest text-luxury-soft-gold font-bold">
-                    Property of Interest
-                  </label>
-                  <select
-                    id="project"
-                    name="project"
-                    value={formData.project}
-                    onChange={handleInputChange}
-                    className="bg-luxury-secondary/50 border border-luxury-graphite text-sm rounded-lg p-3 text-luxury-text-primary focus:outline-none focus:border-luxury-gold hover:border-luxury-gold/50 transition-colors duration-300"
+                {/* Custom Project Dropdown */}
+                <div className="flex flex-col gap-2 relative">
+                  <label className="text-[11px] font-semibold text-[#8B95A5] uppercase tracking-wider">Project Type</label>
+                  
+                  {/* Dropdown Toggle Button */}
+                  <button
+                    type="button"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="w-full bg-[#0D1117] border border-white/[0.06] rounded-xl px-5 py-3.5 text-[13px] text-white text-left flex items-center justify-between hover:border-white/10 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/30 transition-all duration-300 cursor-pointer"
                   >
-                    <option value="Palms Oceanfront Duplex">The Palms Oceanfront Estate</option>
-                    <option value="Oasis Royal Pavilion">Oasis Royal Pavilion</option>
-                    <option value="Summit Penthouses">The Summit Penthouses</option>
-                    <option value="Teakwood Manor">The Teakwood Manor</option>
-                    <option value="Aura Grand Crest">Aura Grand Crest</option>
-                    <option value="Bespoke Custom Villa">Bespoke Custom Villa Design</option>
-                  </select>
+                    <span>{formState.projectType}</span>
+                    <ChevronDown size={15} className={`text-[#D4AF37] transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
+                  </button>
+
+                  <AnimatePresence>
+                    {dropdownOpen && (
+                      <>
+                        {/* Outside Click Interceptor */}
+                        <div className="fixed inset-0 z-20 cursor-default" onClick={() => setDropdownOpen(false)} />
+                        
+                        {/* Dropdown Options Box */}
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute top-[76px] left-0 w-full bg-[#0D1117] border border-white/[0.08] rounded-xl shadow-2xl z-30 py-2 mt-1 overflow-hidden"
+                        >
+                          {projectTypes.map((type) => (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => {
+                                setFormState({ ...formState, projectType: type });
+                                setDropdownOpen(false);
+                              }}
+                              className={`w-full text-left px-5 py-3 text-[13px] transition-colors ${
+                                formState.projectType === type
+                                  ? 'text-[#D4AF37] font-semibold bg-white/[0.02]'
+                                  : 'text-white/80 hover:bg-white/[0.02] hover:text-[#D4AF37]'
+                              }`}
+                            >
+                              {type}
+                            </button>
+                          ))}
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
                 </div>
 
-                {/* Message field */}
-                <div className="flex flex-col space-y-2">
-                  <label htmlFor="message" className="text-[10px] uppercase tracking-widest text-luxury-soft-gold font-bold">
-                    Message / Special Requests
-                  </label>
+                {/* Message Field */}
+                <div className="flex flex-col gap-2">
+                  <label className="text-[11px] font-semibold text-[#8B95A5] uppercase tracking-wider">Message</label>
                   <textarea
-                    id="message"
-                    name="message"
                     rows={4}
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    placeholder="Describe your architectural ideas or structural preferences..."
-                    className="bg-luxury-secondary/50 border border-luxury-graphite text-sm rounded-lg p-3 text-luxury-text-primary placeholder:text-luxury-text-secondary/35 focus:outline-none focus:border-luxury-gold hover:border-luxury-gold/50 transition-colors duration-300 resize-none"
+                    required
+                    value={formState.message}
+                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                    placeholder="Tell us about your vision..."
+                    className="w-full bg-[#0D1117] border border-white/[0.06] rounded-xl px-5 py-3.5 text-[13px] text-white placeholder-white/15 hover:border-white/10 focus:outline-none focus:border-[#D4AF37]/50 focus:ring-1 focus:ring-[#D4AF37]/30 focus:shadow-[0_0_15px_rgba(212,175,55,0.08)] transition-all duration-300 resize-none"
                   />
                 </div>
 
                 {/* Submit button */}
                 <button
                   type="submit"
-                  disabled={isSubmitting}
-                  className="w-full group flex items-center justify-center gap-2 bg-luxury-gold border border-luxury-gold text-luxury-bg hover:bg-transparent hover:text-luxury-gold px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all duration-300 cursor-pointer disabled:opacity-50"
+                  disabled={submitted}
+                  className="w-full inline-flex items-center justify-center gap-2 bg-[#D4AF37] text-[#080C14] font-bold py-4 rounded-xl hover:bg-[#FBBF24] active:scale-[0.98] transition-all uppercase tracking-widest cursor-pointer text-[12px] group"
                 >
-                  {isSubmitting ? 'Submitting Dossier...' : 'Request Private Dossier'}
-                  <Send className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+                  {submitted ? (
+                    <span>Thank You! Message Sent.</span>
+                  ) : (
+                    <>
+                      <span>Submit Inquiry</span>
+                      <Send size={12} className="group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform duration-300" />
+                    </>
+                  )}
                 </button>
+
               </form>
-            ) : (
-              // Success Message Layout
-              <div 
-                ref={successRef}
-                className="w-full text-center space-y-6 py-10 opacity-0"
-              >
-                <div className="w-16 h-16 rounded-full bg-luxury-gold/10 border border-luxury-gold mx-auto flex items-center justify-center text-luxury-gold">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-serif text-3xl font-bold text-luxury-text-primary">
-                    Dossier Requested
-                  </h3>
-                  <p className="text-sm text-luxury-gold font-mono uppercase tracking-wider">
-                    Registration ID: SMS-{Math.floor(100000 + Math.random() * 900000)}
-                  </p>
-                </div>
-
-                <p className="text-xs text-luxury-text-secondary font-light max-w-sm mx-auto leading-relaxed">
-                  Thank you, <span className="text-luxury-soft-gold font-semibold">{formData.name}</span>. 
-                  Our luxury concierge liaison based in Nagercoil will contact you via <span className="text-luxury-soft-gold font-semibold">{formData.phone}</span> or <span className="text-luxury-soft-gold font-semibold">{formData.email}</span> within 2 hours.
-                </p>
-
-                <div className="pt-4">
-                  <button
-                    onClick={() => {
-                      setIsSubmitted(false);
-                      setFormData({ name: '', phone: '', email: '', project: 'Palms Oceanfront Duplex', message: '' });
-                    }}
-                    className="group flex items-center justify-center gap-2 border border-luxury-graphite hover:border-luxury-gold text-luxury-text-secondary hover:text-luxury-gold px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-widest transition-all duration-300 mx-auto"
-                  >
-                    Submit New Inquiry
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
-
+            </motion.div>
           </div>
-
         </div>
 
-        </motion.div>
       </div>
     </section>
   );
