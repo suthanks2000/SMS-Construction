@@ -10,9 +10,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const pathname = usePathname();
 
-  const isActive = (href: string) => {
+  const isActive = (href: string, name?: string) => {
+    if (name === 'Order') {
+      return false;
+    }
     if (href === '/') {
       return pathname === '/';
     }
@@ -23,16 +27,21 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      const threshold = pathname === '/' ? window.innerHeight - 80 : 20;
+      setScrolled(window.scrollY > threshold);
+    };
     window.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Services', href: '/services' },
     { name: 'Projects', href: '/projects' },
+    { name: 'Order', href: '/contact' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -56,16 +65,29 @@ export default function Navbar() {
     }
   };
 
+  const phoneIconVariants = {
+    initial: { rotate: 0 },
+    hover: {
+      rotate: [0, -20, 20, -20, 20, -10, 10, 0],
+      transition: { duration: 0.5 }
+    }
+  };
+
+  const callBtnVariants = {
+    initial: { scale: 1, y: 0, boxShadow: "0 4px 12px rgba(212, 175, 55, 0.15)" },
+    hover: { scale: 1.05, y: -2, boxShadow: "0 10px 25px rgba(212, 175, 55, 0.35)" }
+  };
+
   return (
     <>
       <motion.header
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-        className={`fixed left-1/2 -translate-x-1/2 w-[92%] max-w-5xl z-50 transition-all duration-500 rounded-full ${
+        className={`fixed left-1/2 -translate-x-1/2 z-50 transition-all duration-500 shine-white ${
           scrolled
-            ? 'top-4 py-3 px-6 bg-[#080C14]/80 backdrop-blur-xl border border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.5)]'
-            : 'top-6 py-4 px-6 bg-[#080C14]/50 backdrop-blur-md border border-white/[0.06]'
+            ? 'top-0 w-full max-w-full rounded-none py-3.5 px-8 bg-gradient-to-r from-[#0C1220]/95 via-[#070B14]/98 to-[#0C1220]/95 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_15px_35px_rgba(0,0,0,0.6)]'
+            : 'top-6 w-[92%] max-w-5xl rounded-full py-4 px-6 bg-gradient-to-r from-[#0C1220]/75 via-[#070B14]/80 to-[#0C1220]/75 backdrop-blur-md border border-white/[0.05] hover:border-white/[0.1] shadow-lg'
         }`}
       >
         <motion.div 
@@ -91,25 +113,38 @@ export default function Navbar() {
             </Link>
           </motion.div>
 
-          <nav className="hidden lg:flex gap-8 items-center">
-            {navLinks.map((link) => {
-              const active = isActive(link.href);
+          <nav className="hidden lg:flex gap-1.5 items-center">
+            {navLinks.map((link, index) => {
+              const active = isActive(link.href, link.name);
               return (
-                <motion.div key={link.name} variants={navItem}>
+                <motion.div
+                  key={link.name}
+                  variants={navItem}
+                  className="relative"
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                >
                   <Link
                     href={link.href}
-                    className={`text-[13px] font-semibold transition-colors duration-300 tracking-wide relative pb-1.5 ${
-                      active ? 'text-[#D4AF37]' : 'text-[#8B95A5] hover:text-[#D4AF37]'
+                    className={`px-4 py-2 text-[15px] font-semibold tracking-wide relative block rounded-full transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 shine-white ${
+                      active ? 'text-[#D4AF37]' : 'text-[#8B95A5] hover:text-white'
                     }`}
                   >
-                    {link.name}
                     {active && (
                       <motion.span
-                        layoutId="activeNavDot"
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#D4AF37] rounded-full"
-                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                        layoutId="activePill"
+                        className="absolute inset-0 bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-full"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
                       />
                     )}
+                    {!active && hoveredIndex === index && (
+                      <motion.span
+                        layoutId="hoverPill"
+                        className="absolute inset-0 bg-white/[0.06] border border-white/5 rounded-full"
+                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                      />
+                    )}
+                    <span className="relative z-10">{link.name}</span>
                   </Link>
                 </motion.div>
               );
@@ -117,13 +152,19 @@ export default function Navbar() {
           </nav>
 
           <motion.div variants={navItem} className="hidden lg:flex items-center">
-            <a
+            <motion.a
               href="tel:+919443200000"
-              className="flex items-center gap-2 bg-[#D4AF37] text-[#080C14] font-bold text-[12px] px-5 py-2 rounded-full hover:bg-[#FBBF24] active:scale-95 transition-all duration-300"
+              variants={callBtnVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 bg-[#D4AF37] text-[#080C14] font-bold text-[13px] px-5 py-2.5 rounded-full shine-gold transition-all duration-300 cursor-pointer"
             >
-              <PhoneCall size={12} />
+              <motion.span variants={phoneIconVariants} className="flex items-center justify-center">
+                <PhoneCall size={13} />
+              </motion.span>
               <span>Call Now</span>
-            </a>
+            </motion.a>
           </motion.div>
 
           <motion.button
@@ -147,14 +188,14 @@ export default function Navbar() {
           >
             <nav className="flex flex-col gap-6 text-center">
               {navLinks.map((link) => {
-                const active = isActive(link.href);
+                const active = isActive(link.href, link.name);
                 return (
                   <Link
                     key={link.name}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`text-2xl font-serif font-semibold transition-colors ${
-                      active ? 'text-[#D4AF37]' : 'text-white/80 hover:text-[#D4AF37]'
+                    className={`text-2xl font-serif font-semibold transition-colors duration-300 ${
+                      active ? 'text-[#D4AF37]' : 'text-white/80 hover:text-white'
                     }`}
                   >
                     {link.name}
@@ -162,14 +203,20 @@ export default function Navbar() {
                 );
               })}
             </nav>
-            <a
+            <motion.a
               href="tel:+919443200000"
               onClick={() => setIsOpen(false)}
-              className="flex items-center gap-2 bg-[#D4AF37] text-[#080C14] font-bold px-8 py-3 rounded-full"
+              variants={callBtnVariants}
+              initial="initial"
+              whileHover="hover"
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 bg-[#D4AF37] text-[#080C14] font-bold px-8 py-3 rounded-full shine-gold transition-all duration-300 cursor-pointer"
             >
-              <PhoneCall size={18} />
+              <motion.span variants={phoneIconVariants} className="flex items-center justify-center">
+                <PhoneCall size={18} />
+              </motion.span>
               <span>Call Now</span>
-            </a>
+            </motion.a>
           </motion.div>
         )}
       </AnimatePresence>

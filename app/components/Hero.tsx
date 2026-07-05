@@ -107,18 +107,23 @@ export default function Hero() {
           animate="visible"
           className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-xs sm:max-w-none mx-auto w-full"
         >
-          <a
+          <motion.a
             href="#contact"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#D4AF37] text-[#080C14] font-semibold text-[13px] sm:text-sm px-6 py-3 sm:px-8 sm:py-4 rounded-full hover:bg-[#FBBF24] active:scale-95 transition-all duration-300 cursor-pointer"
+            whileHover={{ scale: 1.04, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#D4AF37] text-[#080C14] font-semibold text-[13px] sm:text-sm px-6 py-3 sm:px-8 sm:py-4 rounded-full hover:bg-[#FBBF24] transition-all duration-300 cursor-pointer shadow-[0_4px_12px_rgba(212,175,55,0.15)] group"
           >
             <span>Get Free Quote</span>
-            <ArrowRight size={14} />
-          </a>
+            <ArrowRight size={16} className="group-hover:translate-x-2.5 transition-transform duration-300" />
+          </motion.a>
           <a
             href="#projects"
-            className="w-full sm:w-auto inline-flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/15 text-white font-medium text-[13px] sm:text-sm px-6 py-3 sm:px-8 sm:py-4 rounded-full hover:bg-white/15 active:scale-95 transition-all duration-300"
+            className="w-full sm:w-auto inline-flex items-center justify-center bg-white/10 backdrop-blur-sm border border-white/15 text-white font-medium text-[13px] sm:text-sm px-6 py-3 sm:px-8 sm:py-4 rounded-full hover:bg-white/15 active:scale-95 transition-all duration-300 group relative overflow-hidden"
           >
-            View Projects
+            <span
+              className="absolute right-0 -mt-12 h-32 w-8 translate-x-12 rotate-12 bg-white opacity-10 transition-all duration-1000 ease-out group-hover:-translate-x-[260px] pointer-events-none"
+            />
+            <span>View Projects</span>
           </a>
         </motion.div>
       </div>
